@@ -292,7 +292,7 @@ class Parser:
 
                 for idx in range(row_count):
                     if current_chords[idx] == object_chords[idx]:
-                        print(idx, current_chords[idx], object_chords[idx])
+
                         song_part.delete_line(idx, "chords")
                         
                 

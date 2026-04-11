@@ -198,10 +198,12 @@ class ChordProFormatter(Formatter):
 
         return out
     
-    def format_parts(self, parts):
+    def format_parts(self, parts, verse_count = None):
 
         output = []
-        verse_count = 0
+        
+        if verse_count is not None:
+            verse_count = 0
 
         for part in parts:
             if verse_count is not None and part.type == "verse":
