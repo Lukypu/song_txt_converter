@@ -2,6 +2,11 @@
 
 A lightweight Python tool for parsing chord/lyrics text (e.g. from Ultimate Guitar) and exporting it into structured formats such as **ChordPro** and **LaTeX**.
 
+This was inspired by and built upon a fantastic script by kasnerz, more about him here: 
+[https://github.com/kasnerz/chords2latex]
+
+The code also uses parts of his code.
+
 ---
 
 ## Features
