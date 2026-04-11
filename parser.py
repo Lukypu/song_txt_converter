@@ -71,11 +71,27 @@ def get_line_type(line):
     return "SIMPLE"
 
 
+class Parser:
 
-def song_parser(text):
+    def __init__(self, text):
 
+        self.text_lines = text.split("\n")
+        self.idx_start_of_chords = 0
+        self.metadata = None
+        self.song_parts = None
+        self.song = None
 
-    def header_parser(lines, meta_data_pattern = r'^([A-Za-z_]+):\s*(.*)$'):
+    def __call__(self, minimize = None):
+        if self.song is None:
+            self.song_parser()
+
+        if minimize is not None:
+            for object in minimize:
+                self.minimize(object)
+        
+        return self.song
+
+    def header_parser(self, meta_data_pattern = r'^([A-Za-z_]+):\s*(.*)$'):
 
         meta_data = {
             # common/chordpro metadate
@@ -99,7 +115,7 @@ def song_parser(text):
 
         # read and parse header
         idx_start_of_chords = 0
-        for idx, line in enumerate(lines):
+        for idx, line in enumerate(self.text_lines):
             line_type = get_line_type(line)
 
             if line_type == "CHORDS" or line_type.endswith("_MARKER"):
@@ -133,15 +149,17 @@ def song_parser(text):
         if meta_data["string"] is not []:
             meta_data["string"] = "\n".join(meta_data["string"])
 
-        return idx_start_of_chords, meta_data
-    
-    def body_parser(lines, idx_start_of_chords=0):
+        self.metadata = meta_data
+        self.idx_start_of_chords = idx_start_of_chords
+
+ 
+    def body_parser(self):
 
         # where to store parsed song parts
         song_parts = []
         current_songpart = None
 
-        for idx, line in enumerate(lines[idx_start_of_chords:]):
+        for idx, line in enumerate(self.text_lines[self.idx_start_of_chords:]):
             linetype = get_line_type(line)
 
             # skip empty lines
@@ -152,7 +170,7 @@ def song_parser(text):
 
                     if song_parts == []:
                         current_songpart.type = "intro"
-                    elif idx == len(lines):
+                    elif idx == len(self.text_lines):
                         current_songpart.type = "outro"
                     else:
                         current_songpart.type= "instrumental"
@@ -176,7 +194,7 @@ def song_parser(text):
             elif linetype == "CHORDS":
 
                 if current_songpart is None:
-                    if idx == len(lines):
+                    if idx == len(self.text_lines):
                         current_songpart = SongPart("outro")
                     else:
                         current_songpart = SongPart("chords")
@@ -203,7 +221,6 @@ def song_parser(text):
                     current_songpart.type = "bridge"
 
                 current_songpart.add(SongLine(line, "lyrics"))
-
             elif linetype == "SIMPLE" and current_songpart.type in ["verse", "chorus", "bridge"]:
                 current_songpart.add(SongLine(line, "lyrics"))
 
@@ -221,12 +238,74 @@ def song_parser(text):
 
             song_parts.append(current_songpart)
 
+        
+        self.song_parts = song_parts
 
-        return song_parts
-    
-    # body of song parser function
-    lines = text.readlines()
-    idx_start_of_chords, meta_data = header_parser(lines)
-    song_parts = body_parser(lines, idx_start_of_chords)
+    def song_parser(self):
 
-    return Song(meta_data, song_parts)
+        self.header_parser()
+        self.body_parser()
+        
+        self.song = Song(self.metadata, self.song_parts)
+
+
+    def minimize(self, target):
+        
+        def get_chord_progression(song_part):
+
+            chords_list = []
+            for song_line in song_part.lines:
+                if song_line.type == "chords":
+                    chords = song_line.content.strip().split()
+                    chords_list.append(chords)
+            
+            return chords_list
+
+
+
+        def get_lyrics(song_part):
+            
+            words_list = []
+            for song_line in song_part.lines:
+                if song_line.type == "lyrics":
+                    words = song_line.content.strip().split()
+                    words_list.append(words)
+
+            return words_list
+            
+
+        # go through song parts and compare lyrics and chords --> remove what need not be
+        object_chords = []
+        object_lyrics = []
+        for i, song_part in enumerate(self.song_parts):
+            
+            # initialize chords and lyrics to compare to
+            if song_part.type == target and len(object_chords) == 0:
+                object_chords = get_chord_progression(song_part)
+                object_lyrics = get_lyrics(song_part)
+
+            elif song_part.type == target and len(object_chords) != 0:
+
+                # compare the chords of first instance with current one --> delete if same
+                current_chords = get_chord_progression(song_part)
+                row_count = max(len(object_chords), len(current_chords))
+
+                for idx in range(row_count):
+                    if current_chords[idx] == object_chords[idx]:
+                        print(idx, current_chords[idx], object_chords[idx])
+                        song_part.delete_line(idx, "chords")
+                        
+                
+                # compare lyrics with the first instance --> if all same and all chords deleted --> delete
+                # TODO
+
+            self.song_parts[i] = song_part
+
+
+        
+
+
+
+                    
+
+                

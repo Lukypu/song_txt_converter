@@ -48,12 +48,19 @@ class SongPart:
             count = 0
             for i, line in enumerate(self.lines):
 
-                if line.type == type:
+                if line.type == "lyrics":
                     count +=1
                 
-                if count == idx:
-                   del self.lines[i] 
-
+                if count == idx+1:
+                    if type == "lyrics":
+                        del self.lines[i]
+                    
+                    # deletes chords over idx-th line
+                    elif type == "chords" and (i-1>=0):
+                        if self.lines[i-1].type == "chords":
+                            del self.lines[i-1]
+                        
+        
 
 class Song:
     def __init__(self, meta_data, song_parts, source = None, language=None, header_string = None, footer_string = None):
@@ -80,10 +87,6 @@ class Song:
     def add(self, part):
         self.song_parts.append(part)
 
-    def minimize(self):
-        # minimaze the length of a song by removing redundant
-        # chord lines and shortening/refer to repeating choruses and verses
-        pass
 
 
     def render(self, formatter, verse_count=None):
