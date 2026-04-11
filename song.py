@@ -39,6 +39,20 @@ class SongPart:
     def add(self, line):
         self.lines.append(line)
 
+    def delete_line(self, idx, type = None):
+
+        if type is None:
+            del self.lines[idx]
+
+        else:
+            count = 0
+            for i, line in enumerate(self.lines):
+
+                if line.type == type:
+                    count +=1
+                
+                if count == idx:
+                   del self.lines[i] 
 
 
 class Song:
