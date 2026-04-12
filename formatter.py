@@ -395,6 +395,96 @@ class ChordProFormatter(Formatter):
     
     def match_chord_lyrics(self, chord_line, lyrics_line):
         return super().match_chord_lyrics(chord_line, lyrics_line)
+    
+
+class TxtFormatter(Formatter):
+
+    def format_chord(self, chord):
+        return chord
+
+    def meta_line_print(self, key, value):
+        return (f"{key}: {value}")
+
+    def comment_out_line(self, string):
+        return f"# {string}" 
+
+    def print_out_line(self, string):
+        return f"{string}"
+
+    def start_of_type(self, type, label = None):
+        if label is not None:
+            return f"[{type} {label}]"
+        else:  
+            return f"[{type}]"
+
+    def end_of_type(self, type):
+        return None
+
+    def format_lyrics_line(self, line):
+        # often just repeat the line unless stated otherwise
+        return line
+
+    def format_chords_line(self, line):
+        return super().format_chords_line(line)
+
+    def format_chords_over_lyrics_line(self, chord_line, lyrics_line):
+        return [chord_line, lyrics_line]
+
+
+   
+    # formatting of individual parts
+    def metadata(self, meta):
+        out = []
+
+        for key, value in meta.items():
+            if value is None:
+                continue
+
+            key_norm = key.lower().strip()
+            value = str(value).strip()
+
+
+            if key_norm in self.STANDARD_META and (key_norm == "title" or key_norm == "artist"):
+                out.append(value)
+
+            # --- standard chordpro metadata ---
+            elif key_norm in self.STANDARD_META:
+                out.append(self.meta_line_print(key, value))
+
+            # --- non-standard to be noted (no print) ---
+            elif key_norm in self.MY_META:
+                out.append(self.print_out_line(f"{key}: {value}"))
+
+            # --- non-standard to be printed ---
+            else:
+                out.append(self.print_out_line(f"{key}: {value}"))
+        
+
+        return out
+
+   
+    def header(self, header_string):
+        return super().header(header_string)
+    
+    def format_part(self, part, verse_count=0):
+        return super().format_part(part, verse_count=verse_count)
+    
+    def format_parts(self, parts):
+        return super().format_parts(parts)
+
+    def footer(self, footer):
+        if footer is None:
+            return None
+        else:
+            return [self.print_out_line(footer.strip())]
+
+    # utilities
+    def find_overline_chords(self, chord_line):
+        return super().find_overline_chords(chord_line)
+    
+    def match_chord_lyrics(self, chord_line, lyrics_line):
+        return super().match_chord_lyrics(chord_line, lyrics_line)
+ 
 
 
 if __name__ == "__main__":
