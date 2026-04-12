@@ -103,9 +103,10 @@ class Song:
         output.extend(formatter.format_parts(self.song_parts))
 
         # --- footer ---
-        if self.footer:
-            output.append(formatter.footer(self.footer))
+        if formatter.footer(self.footer) is not None:
+            output.extend(formatter.footer(self.footer))
 
+        # print(output)
         return "\n".join(output)
     
 if __name__ == "__main__":
