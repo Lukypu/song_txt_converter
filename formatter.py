@@ -138,7 +138,7 @@ class Formatter():
             for line in part.lines:
 
                 if line.type == "chords":
-                    chord_container = line.content.strip()
+                    chord_container = line.content.rstrip()
 
                 elif line.type == "lyrics" and chord_container is not None:
 
@@ -149,7 +149,7 @@ class Formatter():
                     chord_container = None
 
                 elif line.type == "lyrics" and chord_container is None:
-                    out.append(self.format_lyrics_line(line.content.strip()))
+                    out.append(self.format_lyrics_line(line.content.rstrip()))
 
                 else:
                     raise ValueError
@@ -162,7 +162,7 @@ class Formatter():
         
         if part.type in ["intro", "instrumental", "outro", "chords"]:
             for line in part.lines:
-                out.append(self.format_chords_line(line.content.strip()))
+                out.append(self.format_chords_line(line.content.rstrip()))
             
             out.append("")
 

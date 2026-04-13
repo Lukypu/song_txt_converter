@@ -152,9 +152,57 @@ class Parser:
  
     def body_parser(self):
 
+        def clean_section_markers(song_part):
+            """
+            Removes inline section markers and adjusts chord alignment above.
+            Works in-place on SongPart.
+            """
+
+            MARKER_REGEX = re.compile(
+                r'^\s*(?:'
+                r'R:|Ref:|'          # chorus markers
+                r'\d+\s*[:\.)]?|'      # 1:, 1., 1 , 1
+                r'\s*'
+                r')\s*'
+            )
+
+            lines = song_part.lines
+            marker_len = 0
+
+            for i in range(len(lines)):
+
+                if lines[i].type == "chords":
+                    continue
+
+                line = lines[i].content
+
+                match = MARKER_REGEX.match(line)
+                if not match:
+                    continue
+
+                marker_len = match.end()
+
+                # remove marker from lyric line
+                lines[i].content = line[marker_len:]
+
+
+                # adjust preceding chord line if present
+                if i > 0 and lines[i - 1].type == "chords":
+                    prev = lines[i - 1].content
+
+                    # remove same number of characters from chord line
+                    # but never go below 0
+                    cut = min(len(prev), marker_len)
+                    lines[i - 1].content = prev[cut:]
+
+            song_part.lines = lines
+
+            return song_part
+
         # where to store parsed song parts
         song_parts = []
         current_songpart = None
+        inline_markers = False
 
         for idx, line in enumerate(self.text_lines[self.idx_start_of_chords:]):
             linetype = get_line_type(line)
@@ -167,13 +215,18 @@ class Parser:
 
                     if song_parts == []:
                         current_songpart.type = "intro"
+
                     elif idx == len(self.text_lines):
                         current_songpart.type = "outro"
+
                     else:
                         current_songpart.type= "instrumental"
 
                 # wrap up the current song part
                 elif current_songpart is not None and current_songpart.lines !=  []:
+
+                    if inline_markers:
+                        current_songpart = clean_section_markers(current_songpart)
 
                     song_parts.append(current_songpart)
                     current_songpart = None
@@ -207,17 +260,21 @@ class Parser:
                 if current_songpart is None:
                     current_songpart == SongPart(None)
 
+                if linetype.endswith("_BEGIN"):
+                    inline_markers = True
+
                 # "inline"/no markers
-                if linetype == "VERSE_BEGIN" or linetype == "SIMPLE":
+                if linetype == "VERSE_BEGIN":
                     current_songpart.type = "verse"
 
                 elif linetype == "CHORUS_BEGIN":
                     current_songpart.type = "chorus"
 
-                elif linetype == "BRIDGE_BEGIN":
+                elif linetype == "BRIDGE_BEGIN" or linetype == "SIMPLE":
                     current_songpart.type = "bridge"
 
                 current_songpart.add(SongLine(line, "lyrics"))
+
             elif linetype == "SIMPLE" and current_songpart.type in ["verse", "chorus", "bridge"]:
                 current_songpart.add(SongLine(line, "lyrics"))
 
@@ -233,6 +290,10 @@ class Parser:
             if current_songpart.type == "chords":
                 current_songpart.type = "outro"
 
+            if inline_markers:
+                current_songpart = clean_inline_markers(current_songpart)
+
+   
             song_parts.append(current_songpart)
 
         
