@@ -82,12 +82,10 @@ class Parser:
         self.song = None
 
     def __call__(self, minimize = False):
+
         if self.song is None:
             self.song_parser()
 
-        if minimize is True:
-            self.minimize(object)
-        
         return self.song
 
     def header_parser(self, meta_data_pattern = r'^([A-Za-z_]+):\s*(.*)$'):
@@ -273,7 +271,7 @@ class Parser:
             return words_list
             
 
-        def minimize_target(self, target):
+        def minimize_target(target):
             # go through song parts and compare lyrics and chords --> remove what need not be
             object_chords = []
             object_lyrics = []
@@ -288,7 +286,7 @@ class Parser:
 
                     # compare the chords of first instance with current one --> delete if same
                     current_chords = get_chord_progression(song_part)
-                    row_count = max(len(object_chords), len(current_chords))
+                    row_count = min(len(object_chords), len(current_chords))
 
                     for idx in range(row_count):
                         if current_chords[idx] == object_chords[idx]:
@@ -303,6 +301,9 @@ class Parser:
 
         for target in ["verse", "chorus"]:
             minimize_target(target)
+
+    def maximize():
+        pass
 
 
         

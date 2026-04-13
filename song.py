@@ -89,7 +89,7 @@ class Song:
 
 
 
-    def render(self, formatter, verse_count=None):
+    def render(self, formatter, verse_count=None, chords_conversion=False):
         output = []
 
         # --- metadata ---
