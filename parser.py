@@ -291,7 +291,7 @@ class Parser:
                 current_songpart.type = "outro"
 
             if inline_markers:
-                current_songpart = clean_inline_markers(current_songpart)
+                current_songpart = clean_section_markers(current_songpart)
 
    
             song_parts.append(current_songpart)
