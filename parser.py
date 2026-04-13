@@ -81,13 +81,12 @@ class Parser:
         self.song_parts = None
         self.song = None
 
-    def __call__(self, minimize = None):
+    def __call__(self, minimize = False):
         if self.song is None:
             self.song_parser()
 
-        if minimize is not None:
-            for object in minimize:
-                self.minimize(object)
+        if minimize is True:
+            self.minimize(object)
         
         return self.song
 
@@ -249,7 +248,7 @@ class Parser:
         self.song = Song(self.metadata, self.song_parts)
 
 
-    def minimize(self, target):
+    def minimize(self, lyrics = False):
         
         def get_chord_progression(song_part):
 
@@ -274,32 +273,36 @@ class Parser:
             return words_list
             
 
-        # go through song parts and compare lyrics and chords --> remove what need not be
-        object_chords = []
-        object_lyrics = []
-        for i, song_part in enumerate(self.song_parts):
-            
-            # initialize chords and lyrics to compare to
-            if song_part.type == target and len(object_chords) == 0:
-                object_chords = get_chord_progression(song_part)
-                object_lyrics = get_lyrics(song_part)
+        def minimize_target(self, target):
+            # go through song parts and compare lyrics and chords --> remove what need not be
+            object_chords = []
+            object_lyrics = []
+            for i, song_part in enumerate(self.song_parts):
 
-            elif song_part.type == target and len(object_chords) != 0:
+                # initialize chords and lyrics to compare to
+                if song_part.type == target and len(object_chords) == 0:
+                    object_chords = get_chord_progression(song_part)
+                    object_lyrics = get_lyrics(song_part)
 
-                # compare the chords of first instance with current one --> delete if same
-                current_chords = get_chord_progression(song_part)
-                row_count = max(len(object_chords), len(current_chords))
+                elif song_part.type == target and len(object_chords) != 0:
 
-                for idx in range(row_count):
-                    if current_chords[idx] == object_chords[idx]:
+                    # compare the chords of first instance with current one --> delete if same
+                    current_chords = get_chord_progression(song_part)
+                    row_count = max(len(object_chords), len(current_chords))
 
-                        song_part.delete_line(idx, "chords")
-                        
-                
-                # compare lyrics with the first instance --> if all same and all chords deleted --> delete
-                # TODO
+                    for idx in range(row_count):
+                        if current_chords[idx] == object_chords[idx]:
 
-            self.song_parts[i] = song_part
+                            song_part.delete_line(idx, "chords")
+
+
+                    # compare lyrics with the first instance --> if all same and all chords deleted --> delete
+                    # TODO
+
+                self.song_parts[i] = song_part
+
+        for target in ["verse", "chorus"]:
+            minimize_target(target)
 
 
         

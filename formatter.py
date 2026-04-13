@@ -433,6 +433,7 @@ class TxtFormatter(Formatter):
 
    
     # formatting of individual parts
+    # This could be done better by just redefining my and accepted metadata
     def metadata(self, meta):
         out = []
 
