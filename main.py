@@ -157,6 +157,6 @@ if __name__ == "__main__":
     if args.csv:
         with open(args.csv, "a") as csv:
             # format title, artist, filename, date_added, language, source, 
-            csv.write(f"{song.metadata['title']};{song.metadata['artist']};{args.output};{datetime.now().strftime('%Y-%m-%d')};{args.language};{args.source}")
+            csv.write(f"{song.metadata['title']};{song.metadata['artist']};{args.output};{datetime.now().strftime('%Y-%m-%d')};{args.language};{args.source}\n")
 
     
