@@ -73,7 +73,7 @@ class Formatter():
 
  
     # format parts of song: metadata, header, part, parts, footer
-    def metadata(self, meta):
+    def metadata(self, meta, add_empty_line = True):
         out = []
 
         for key, value in meta.items():
@@ -97,13 +97,13 @@ class Formatter():
             # --- non-standard to be printed ---
             else:
                 out.append(self.print_out_line(f"{key}: {value}"))
-        
-        out.append("")
-        
 
+        if add_empty_line:
+            out.append("")
+        
         return out
 
-    def header(self, header_string):
+    def header(self, header_string, add_empty_line=True):
         if len(header_string) == 0:
             return []
 
@@ -121,7 +121,9 @@ class Formatter():
 
             out.append(self.print_out_line(line))
 
-        out.append("")
+        if add_empty_line:
+            out.append("")
+
         return out
 
 
@@ -373,10 +375,10 @@ class ChordProFormatter(Formatter):
 
    
     # formatting of individual parts
-    def metadata(self, meta_data):
+    def metadata(self, meta_data, add_empty_line=False):
         return super().metadata(meta_data)
     
-    def header(self, header_string):
+    def header(self, header_string, add_empty_line=False):
         return super().header(header_string)
     
     def format_part(self, part, verse_count=0):
