@@ -9,21 +9,20 @@ Description:
     main function for parser and formatter script
 
 Done:
-    DONE 1) create git version control and divide into seperate files -- main file, song&parser file, formatter file
-    DONE 2) add .tex parser and one page latex pdf printout
-    DONE 3) move verse_count to Formatters       
-    DONE 7) Improve verse count utility
-    DONE 4) add argparse utility
-    DONE 8) add manual add of metadata in song -- title and author
+    DONE - create git version control and divide into seperate files -- main file, song&parser file, formatter file
+    DONE - add .tex parser and one page latex pdf printout
+    DONE - move verse_count to Formatters       
+    DONE - Improve verse count utility
+    DONE - add argparse utility
+    DONE - add manual add of metadata in song -- title and author
+    DONE - Parse pisnicky-akordy.cz better
 Todo: 
     - improve minimize utility
     - add maximaze utility
     - european <--> american chord convention converter
     - Docstrings and list of options (that is going to be part of CLI)
-    - Parse pisnicky-akordy.cz better
 
 Todo ideas:
-    - improve bridge and chorus recognition <=> based on shared/unshared chords
     - add __call__ for lines
 """
 from parser import Parser

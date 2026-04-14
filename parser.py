@@ -105,7 +105,7 @@ class Parser:
             "language" : None,
             "source" : None,
             "string" : [],
-            "modified_date" : None,
+            "date" : None,
         }
 
         meta_pattern = re.compile(rf'{meta_data_pattern}')

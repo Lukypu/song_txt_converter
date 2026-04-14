@@ -23,7 +23,7 @@ class Formatter():
 
     MY_META = {
         "language",
-        "created_date",
+        "date",
         "source",
     }
 
