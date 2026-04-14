@@ -135,14 +135,15 @@ if __name__ == "__main__":
     # writes into output path if given else just on the screen
     if args.output:
 
+        base = os.path.splitext(args.input)[0]
+        ext = args.output.lstrip(".").lower()
+ 
          # check if output_arg already has an extension
         if os.path.splitext(args.output)[1]:
             pass  # already full filename keep as it is
 
         else:
             # otherwise treat as extension
-            base = os.path.splitext(args.input)[0]
-            ext = args.output.lstrip(".").lower()
             args.output = f"{base}.{ext}"
 
         with open(args.output, "w") as output_file:
@@ -156,6 +157,6 @@ if __name__ == "__main__":
     if args.csv:
         with open(args.csv, "a") as csv:
             # format title, artist, filename, date_added, language, source, 
-            csv.write(f"{song.meta['title']};{song.meta['artist']};{args.output};{datetime.now().strftime('%Y-%m-%d')};{args.language};{args.source}")
+            csv.write(f"{song.metadata['title']};{song.metadata['artist']};{args.output};{datetime.now().strftime('%Y-%m-%d')};{args.language};{args.source}")
 
     

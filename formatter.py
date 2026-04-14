@@ -463,7 +463,8 @@ class TxtFormatter(Formatter):
             # --- non-standard to be printed ---
             else:
                 out.append(self.print_out_line(f"{key}: {value}"))
-        
+
+        out.append("") 
 
         return out
 

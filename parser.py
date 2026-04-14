@@ -278,6 +278,10 @@ class Parser:
             elif linetype == "SIMPLE" and current_songpart.type in ["verse", "chorus", "bridge"]:
                 current_songpart.add(SongLine(line, "lyrics"))
 
+            elif linetype == "SIMPLE" and current_songpart.type in ["intro", "outro"]:
+                current_songpart.type = "bridge"
+                current_songpart.add(SongLine(line, "lyrics"))
+
             else:
                 print(current_songpart.type)
                 print(linetype)
