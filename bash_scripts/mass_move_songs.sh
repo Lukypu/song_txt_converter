@@ -10,6 +10,67 @@ USE_LOGFILE=true
 LOGFILE="$OUTPUT_DIR/song-list.log.csv"
 REPLY="none"
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  cat << 'EOF'
+Usage:
+  mass_move_songs.sh [OPTIONS]
+
+Description:
+  Processes downloaded song files, assigns language metadata,
+  moves them into categorized directories, and logs results.
+
+  Expected filename format:
+    author_name-song_name-identifier.txt
+
+Options:
+  -i INPUT_DIR          Input directory (default: ~/Downloads)
+
+  -o OUTPUT_DIR         Output directory.
+                        If provided, files are moved directly here.
+                        If not provided, files are sorted into:
+                          <OUTPUT_DIR>/czech_dir
+                          <OUTPUT_DIR>/english_dir
+                          <OUTPUT_DIR>/other_dir
+
+  -n                    Disable interactive language prompt.
+                        Language is set to "none" and no metadata is injected.
+
+  -h, --help            Show this help message and exit
+
+Behavior:
+  - Prompts user to select language for each file (unless -n is used)
+  - Inserts:
+        language: <language>
+    as the 3rd line of the file (unless language = "none")
+
+  - Moves files based on language:
+        czech    -> czech_dir
+        english  -> english_dir
+        other    -> other_dir
+
+    If -o is specified, files are moved directly to OUTPUT_DIR.
+
+  - Appends entry to log file:
+        <OUTPUT_DIR>/song-list.log.csv
+
+    Format:
+        filename;language;date
+
+Examples:
+  mass_move_songs.sh
+  mass_move_songs.sh -i ~/Downloads
+  mass_move_songs.sh -i ~/Downloads -o ~/Songs
+  mass_move_songs.sh -n
+  mass_move_songs.sh -i ./input -o ./output -n
+
+Notes:
+  - Files not matching pattern "*-*-*.txt" are ignored
+  - Existing files may be overwritten when moved
+  - Log file is appended (not overwritten)
+  - Date format: YYYY-MM-DD
+EOF
+  exit 0
+fi
 # ----------- parse args -----------
 while getopts "i:o:n:l" opt; do
   case $opt in
