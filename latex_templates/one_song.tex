@@ -1,0 +1,56 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- page geometry ----------
+\usepackage[a4paper,margin=1.5cm]{geometry}
+
+% ---------- typography ----------
+\usepackage{libertinus} % or cochineal / xcharter
+\usepackage{microtype}
+
+% ---------- encoding ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% ---------- layout tuning ----------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.2em}
+
+% ---------- chord/lyrics support ----------
+\usepackage{songs}
+
+% Make chord spacing tighter (important for single-page fit)
+\renewcommand{\sbarheight}{0pt}
+\setlength{\sbarheight}{0pt}
+
+% ---------- page style ----------
+\pagestyle{empty}
+
+% ---------- optional: better chord visibility ----------
+\renewcommand{\printchord}[1]{\textbf{#1}}
+
+% ---------- song spacing tuning ----------
+\versesep=8pt
+\afterpreludeskip=6pt
+\beforepostludeskip=6pt
+
+% ---------- metadata helpers ----------
+\newcommand{\songtitle}[1]{\begin{center}{\LARGE\textbf{#1}}\end{center}}
+\newcommand{\songmeta}[2]{\textit{#1:} #2\\}
+
+% ---------- compact song environment ----------
+% \songcolumns{1}
+
+
+\begin{document}
+  \begin{songs}{}
+
+
+
+    \include{the_beatles-eleanor_rigby-ug.tex}
+
+
+
+
+
+  \end{songs}
+\end{document}

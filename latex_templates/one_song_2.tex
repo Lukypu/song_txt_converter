@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage{microtype}
+\usepackage[chorded]{songs}
+\usepackage[utf8]{inputenc}
+\usepackage[nf]{libertinus}
+\usepackage[T1]{fontenc}
+
+% \usepackage[a4paper, margin={1in}]{geometry}
+\usepackage[a4paper,margin=1.5cm]{geometry}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.2em}
+% \renewcommand{\songindent}{0pt}
+
+\pagestyle{plain}
+
+% Make chord spacing tighter (important for single-page fit)
+\setlength{\sbarheight}{0pt}
+
+
+\let\oldnormalfont\normalfont
+\def\normalfont{\oldnormalfont\mdseries}
+% \noversenumbers
+\nosongnumbers
+
+\renewcommand{\printchord}[1]{\rmfamily\bf#1}
+\renewcommand{\idxauthfont}{\large\it}
+\renewcommand{\stitlefont}{
+  \rmfamily\bf\huge\baselineskip=20pt\lineskiplimit=0pt
+}
+\renewcommand{\idxtitlefont}{\rmfamily}
+% \renewcommand{\idxlyricfont}{\rmfamily\mdseries}
+
+\renewcommand{\idxheadfont}{\bfseries\rmfamily}
+\setlength{\idxheadwidth}{0cm}
+
+\versesep=8pt
+\afterpreludeskip=6pt
+\beforepostludeskip=6pt
+
+\renewcommand{\printchord}[1]{\rmfamily\bf#1}
+\renewcommand{\idxauthfont}{\large\it}
+\renewcommand{\stitlefont}{
+  \rmfamily\bf\huge\baselineskip=20pt\lineskiplimit=0pt
+}
+
+
+\usepackage{xpatch}
+\makeatletter
+\xpatchcmd{\SB@@@beginsong}
+  {\SB@addtoindexes\songtitle}
+  {\SB@addtoindexes{\songtitle\ifx\songauthors\empty\else\ -- \songauthors\fi}}
+  {}{}
+\makeatother
+
+% \renewcommand{\lyricfont}{\large}
+% \renewcommand{\printchord}[1]{\rmfamily\bf#1}
+% \renewcommand{\idxauthfont}{\large\it}
+% \renewcommand{\stitlefont}{
+%   \rmfamily\bf\huge\baselineskip=20pt\lineskiplimit=0pt
+% }
+
+% Fixes songs package
+% alternative is to use hard linebreaks
+\makeatletter
+\renewcommand\SB@obeylines{%
+  \let\obeyedline\SB@par%
+  \obeylines%
+  \let\@par\SB@@par%
+}
+\makeatother
+
+
+\songcolumns{1}
+
+\begin{document}
+
+
+\begin{songs}{}
+
+    
+    \include{the_beatles-eleanor_rigby-ug.tex}
+
+
+\end{songs}
+
+\end{document}
