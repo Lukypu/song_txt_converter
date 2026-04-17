@@ -1,0 +1,42 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- page layout ----------
+\usepackage[a4paper,margin=1.5cm]{geometry}
+\usepackage{microtype}
+
+% ---------- fonts (choose one) ----------
+\usepackage{libertinus} % or cochineal / XCharter
+
+% ---------- encoding ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% ---------- leadsheets ----------
+\usepackage{leadsheets}
+
+% ---------- page style ----------
+\pagestyle{plain}
+
+% ---------- general formatting ----------
+% \setlength{\parindent}{0pt}
+% \setlength{\parskip}{0.3em}
+
+% ---------- chord styling ----------
+\renewcommand{\printchord}[1]{\textbf{#1}}
+
+% ---------- leadsheets layout tuning ----------
+\setleadsheets{
+  verse/after-label = \quad,
+  chorus/after-label = \quad,
+  align-chords = lyrics,
+}
+
+% ---------- custom song metadata display ----------
+% \newcommand{\songtitle}[1]{\begin{left}{\LARGE\textbf{#1}}\end{left}}
+% \newcommand{\songmeta}[2]{\textit{#1:} #2\\}
+
+% ---------- compact spacing for single-page output ----------
+\setlength{\parskip}{0.2em}
+
+\begin{document}
+
