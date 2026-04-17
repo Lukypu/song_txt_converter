@@ -6,7 +6,7 @@ INPUT_DIR="$HOME/Downloads"
 ORIGINAL_OUTPUT_DIR="$HOME/Personal/Kytara/Songbook"
 OUTPUT_DIR="$HOME/Personal/Kytara/Songbook"
 ASK_LANG=true
-USE_LOGFILE=true
+USE_LOGFILE=false
 LOGFILE="$OUTPUT_DIR/song-list.log.csv"
 REPLY="none"
 
@@ -77,7 +77,7 @@ while getopts "i:o:n:l" opt; do
     i) INPUT_DIR="$OPTARG" ;;
     o) OUTPUT_DIR="$OPTARG" ;;
     n) ASK_LANG=false ;;
-    l) USE_LOGFILE=false;;
+    l) USE_LOGFILE=true;;
     *) echo "Usage: $0 [-i input_dir] [-o output_dir] [-n (no prompt)] [-l (no logfile)]"; exit 1 ;;
   esac
 done
