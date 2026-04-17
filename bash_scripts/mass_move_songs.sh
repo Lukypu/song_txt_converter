@@ -118,7 +118,7 @@ for file in "$INPUT_DIR"/*-*-*.txt; do
     tmp_file=$(mktemp)
   
     awk -v lang="$lang" '
-      NR==3 { print "language: " lang }
+      NR==4 { print "language: " lang }
       { print }
     ' "$file" > "$tmp_file"
   
