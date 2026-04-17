@@ -2,6 +2,8 @@
 
 set -e
 
+TEX_PREAMBLE="$HOME/Personal/Kytara/Songbook/song_parser_and_formatter/latex_templates/one_song.tex"
+
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   cat << 'EOF'
 Usage:
@@ -43,6 +45,66 @@ EOF
   exit 0
 fi
 
+TWO_COL=0
+
+while getopts "ch" opt; do
+  case "$opt" in
+    c) TWO_COL=1 ;;
+    h) exec "$0" --help ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+
+inject_and_compile() {
+  local preamble="$1"
+  local tex_song="$2"
+  local output="$3"
+
+  local workdir
+  workdir=$(mktemp -d)
+
+  local song_tex="$workdir/song.tex"
+  local preamble_mod="$workdir/main.tex"
+
+  local out_dir
+  out_dir=$(dirname "$output")
+  mkdir -p "$out_dir"
+
+  # write song file
+  cp "$tex_song" "$song_tex"
+
+  # inject \include{song} at line 50
+ awk -v twocol="$TWO_COL" '
+  /\\begin{document}/ {
+    if (twocol == 1) {
+      print "\\songcolumns{2}"
+    }
+    print
+    print "\\include{song}"
+    next
+  }
+  {print}
+' "$preamble" > "$preamble_mod"
+
+  echo "Compiling in: $workdir"
+
+  pdflatex -interaction=nonstopmode \
+           -output-directory="$workdir" \
+           "$preamble_mod" >/dev/null
+
+  # move result
+  local pdf_name
+  pdf_name=$(basename "${preamble_mod%.tex}.pdf")
+
+  mv "$workdir/$pdf_name" "$output" 2>/dev/null || true
+
+  # cleanup
+  rm -rf "$workdir"
+}
+
+
 # ----------- main loop -----------
 for pattern in "$@"; do
   for file in $pattern; do
@@ -62,7 +124,7 @@ for pattern in "$@"; do
 
     case "$ext" in
       tex)
-        FUNCTION_TEX "$file" "$out"
+        inject_and_compile "$TEX_PREAMBLE" "$file" "$out"
         ;;
       crd|chord|chordpro)
         chordpro $file --cfg myconfig.json -o $out
@@ -73,3 +135,4 @@ for pattern in "$@"; do
     esac
   done
 done
+
