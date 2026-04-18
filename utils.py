@@ -14,7 +14,7 @@ Todo:
 import re
 
 def chord_pattern():
-    # return r"[A-H][\w#/]{0,5}"
+    # return r"[A-H][\w#b\d/]{0,5}"
     return r'[A-H](#|b)?(m|mi|maj|min|dim|aug|sus|add)?(\d){0,2}(/[A-H](#|b)?)?.?'
 
 def is_chord(string):

@@ -92,7 +92,7 @@ inject_and_compile() {
 
   pdflatex -interaction=nonstopmode \
            -output-directory="$workdir" \
-           "$preamble_mod" >/dev/null
+           "$preamble_mod" >"$workdir/build.log" 2>&1
 
   # move result
   local pdf_name
@@ -108,6 +108,7 @@ inject_and_compile() {
 # ----------- main loop -----------
 for pattern in "$@"; do
   for file in $pattern; do
+    echo $file
     [ -e "$file" ] || continue
 
     filename=$(basename "$file")
@@ -124,7 +125,9 @@ for pattern in "$@"; do
 
     case "$ext" in
       tex)
-        inject_and_compile "$TEX_PREAMBLE" "$file" "$out"
+        if ! inject_and_compile "$TEX_PREAMBLE" "$file" "$out"; then
+          echo "Failed to process: $file"
+        fi
         ;;
       crd|chord|chordpro)
         chordpro $file --cfg myconfig.json -o $out

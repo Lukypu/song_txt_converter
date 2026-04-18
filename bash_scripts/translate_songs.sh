@@ -91,6 +91,7 @@ fi
 # ----------- process -----------
 for input in "${INPUTS[@]}"; do
   for file in $input; do
+    echo $file
     [ -e "$file" ] || continue
 
     filename=$(basename "$file")

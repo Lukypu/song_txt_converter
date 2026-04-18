@@ -28,7 +28,7 @@ def get_line_type(line):
             "verse": r"\bverse(s)?\b",
             "chorus": r"\bchorus(es)?\b",
             "bridge": r"\bbridge(s)?\b",
-            "instrumental": r"(\binstrumental\b|\bsolo\b|\bbreak\b)",
+            "instrumental": r"(\binstrumental\b|\bsolo\b)",
             "outro": r"\boutro\b",
         }
 
@@ -222,6 +222,9 @@ class Parser:
                     else:
                         current_songpart.type= "instrumental"
 
+                    song_parts.append(current_songpart)
+                    current_songpart = None
+
                 # wrap up the current song part
                 elif current_songpart is not None and current_songpart.lines !=  []:
 
@@ -258,7 +261,7 @@ class Parser:
             elif current_songpart is None or current_songpart.type == "chords":
 
                 if current_songpart is None:
-                    current_songpart == SongPart(None)
+                    current_songpart = SongPart(None)
 
                 if linetype.endswith("_BEGIN"):
                     inline_markers = True

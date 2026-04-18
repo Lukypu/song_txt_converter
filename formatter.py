@@ -285,7 +285,13 @@ class TexFormatter(Formatter):
         return line
 
     def format_chords_line(self, line):
-        return f"{{\\nolyrics {super().format_chords_line(line)}}}"
+
+        out = []
+        out.append(f"\\beginverse*")
+        out.append(f"{{\\nolyrics {super().format_chords_line(line)}}}")
+        out.append(f"\\beginverse")
+
+        return "\n".join(out)
 
     def format_chords_over_lyrics_line(self, chord_line, lyrics_line):
         return [self.match_chord_lyrics(chord_line, lyrics_line)]

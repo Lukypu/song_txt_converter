@@ -21,6 +21,8 @@ Todo:
     - add maximaze utility
     - european <--> american chord convention converter
     - Docstrings and list of options (that is going to be part of CLI)
+    - improve reading of chords divided by "|"
+    - Latex: rewrite instrumentals as bridge ---> Bude lepší použít leadsheets
 
 Todo ideas:
     - add __call__ for lines
