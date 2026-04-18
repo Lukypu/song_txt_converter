@@ -130,7 +130,11 @@ for pattern in "$@"; do
         fi
         ;;
       crd|chord|chordpro)
-        chordpro $file --cfg myconfig.json -o $out
+        if [ "$TWO_COL" -eq 0 ]; then
+          chordpro $file --cfg myconfig.json -o $out
+        elif [ "$TWO_COL" -eq 1 ]; then
+          chordpro $file --cfg myconfig2.json -o $out
+        fi
         ;;
       *)
         echo "Skipping unsupported file: $file"
