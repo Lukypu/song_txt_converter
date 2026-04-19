@@ -134,7 +134,7 @@ class Formatter():
         if part.type in ["verse", "chorus", "bridge"]:
             if self.start_of_type is not None:
                 if part.type == "verse" and verse_count is not None:
-                    out.append(self.start_of_type(part.type, label = verse_count))
+                    out.append(self.start_of_type(part.type, label = f"{verse_count}."))
                 else:  
                     out.append(self.start_of_type(part.type))
 
@@ -174,18 +174,22 @@ class Formatter():
  
 
 
-    def format_parts(self, parts, verse_count = None):
+    def format_parts(self, parts, verse_count = False):
 
         output = []
 
-        if verse_count is not None:
+        if verse_count:
             verse_count = 0
 
-        for part in parts:
-            if verse_count is not None and part.type == "verse":
-                verse_count +=1
+            for part in parts:
+                if part.type == "verse":
+                    verse_count +=1
 
-            output.extend(self.format_part(part, verse_count))
+                output.extend(self.format_part(part, verse_count))
+
+        else:
+            for part in parts:
+                output.extend(self.format_part(part))
         
         return output
 
@@ -390,8 +394,8 @@ class ChordProFormatter(Formatter):
     def format_part(self, part, verse_count=0):
         return super().format_part(part, verse_count=verse_count)
     
-    def format_parts(self, parts):
-        return super().format_parts(parts)
+    def format_parts(self, parts, verse_count=False):
+        return super().format_parts(parts, verse_count=verse_count)
 
     def footer(self, footer):
         if footer is None:

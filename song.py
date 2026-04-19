@@ -89,7 +89,7 @@ class Song:
 
 
 
-    def render(self, formatter, verse_count=None, chords_conversion=False):
+    def render(self, formatter, verse_count=False, chords_conversion=False):
         output = []
 
         # --- metadata ---
@@ -100,7 +100,7 @@ class Song:
             output.extend(formatter.header(self.header))
 
         # --- parts ---
-        output.extend(formatter.format_parts(self.song_parts))
+        output.extend(formatter.format_parts(self.song_parts, verse_count=verse_count))
 
         # --- footer ---
         if formatter.footer(self.footer) is not None:

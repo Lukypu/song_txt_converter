@@ -130,6 +130,7 @@ if __name__ == "__main__":
     else:
         args.chords_conversion = False
 
+
     output = song.render(formatter, verse_count = args.verse_count, chords_conversion = args.chords_conversion)
 
     

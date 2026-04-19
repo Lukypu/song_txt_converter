@@ -112,7 +112,7 @@ for input in "${INPUTS[@]}"; do
         out="${out_dir}/${base}.${suf}"
     
         echo "Processing: $file -> $out"
-        "$SCRIPT" "$file" -o "$out" --csv "$parent_dir/song-list.csv" $MINIMIZE
+        "$SCRIPT" "$file" -o "$out" --csv "$parent_dir/song-list.csv" $MINIMIZE -v
       done
     
     else
